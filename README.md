@@ -1,6 +1,6 @@
 # 🌿 Vape Shop
 
-Welcome to the **Vape Shop** repository! This project provides a seamless shopping experience for vape products. Below, you'll find instructions on how to set up the database and run the application.
+Welcome to the **Vape Shop Inventory System** repository! This project helps manage inventory for vape products efficiently, providing a seamless interface for stock tracking, updates, and database management.
 
 ---
 
@@ -20,3 +20,4 @@ To run the Appwrite image, use the following command:
 
 ```bash
 docker-compose up -d
+```
