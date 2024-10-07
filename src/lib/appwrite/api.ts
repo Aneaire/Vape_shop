@@ -1,4 +1,10 @@
-import { IInventory, IProduct, IProductDocument } from "@/types/data";
+import {
+  ICategory,
+  ICategoryDocument,
+  IInventory,
+  IProduct,
+  IProductDocument,
+} from "@/types/data";
 import { ID, Query } from "appwrite";
 import { config, database, storage } from "./config";
 
@@ -62,17 +68,17 @@ export const getProducts = async () => {
 };
 
 export const getProduct = async (id: string) => {
-  const response = await database.getDocument(
+  const response = await database.listDocuments(
     config.databaseId,
     config.productsId,
-    id
+    [Query.or([Query.equal("$id", id), Query.equal("sku", id)])]
   );
 
   if (!response) {
     throw new Error("Failed to get product");
   }
 
-  return response as IProductDocument;
+  return response.documents[0] as IProductDocument;
 };
 
 export const searchProducts = async (query: string) => {
@@ -87,6 +93,49 @@ export const searchProducts = async (query: string) => {
   }
 
   return response.documents;
+};
+
+export const updateProduct = async (product: IProductDocument) => {
+  const response = await database.updateDocument(
+    config.databaseId,
+    config.productsId,
+    product.$id,
+    {
+      name: product.name,
+      description: product.description,
+      sku: product.sku,
+      price: product.price,
+      nicotineStrength: product.nicotineStrength,
+      flavor: product.flavor,
+      volume: product.volume,
+    } as IProduct
+  );
+
+  if (!response) {
+    throw new Error("Failed to update product");
+  }
+
+  return response;
+};
+
+export const updateProductCategory = async (
+  productId: string,
+  categoryId: string[]
+) => {
+  const response = await database.updateDocument(
+    config.databaseId,
+    config.productsId,
+    productId,
+    {
+      categories: [...categoryId],
+    }
+  );
+
+  if (!response) {
+    throw new Error("Failed to update product category");
+  }
+
+  return response;
 };
 
 export const deleteProduct = async (id: string) => {
@@ -153,6 +202,69 @@ export const getInventory = async () => {
   }
 
   return response.documents;
+};
+
+// Categories
+
+export const createCategory = async (category: ICategory) => {
+  const response = await database.createDocument(
+    config.databaseId,
+    config.categoriesId,
+    ID.unique(),
+    {
+      name: category.name,
+      description: category.description,
+    } as ICategory
+  );
+
+  if (!response) {
+    throw new Error("Failed to create category");
+  }
+
+  return response;
+};
+
+export const getCategories = async () => {
+  const response = await database.listDocuments(
+    config.databaseId,
+    config.categoriesId,
+    [Query.orderDesc("$updatedAt")]
+  );
+
+  if (!response) {
+    throw new Error("Failed to get categories");
+  }
+
+  return response.documents as ICategoryDocument[];
+};
+
+export const getCategory = async (id: string) => {
+  const response = await database.getDocument(
+    config.databaseId,
+    config.categoriesId,
+    id,
+    [Query.select(["products.*", "*"])]
+  );
+
+  if (!response) {
+    throw new Error("Failed to get category");
+  }
+
+  return response as ICategoryDocument;
+};
+
+export const deleteCategory = async (id: string) => {
+  const response = await database.deleteDocument(
+    config.databaseId,
+    config.categoriesId,
+    id
+  );
+
+  if (!response) {
+    throw new Error("Failed to delete category");
+  }
+
+  return response;
 };
 
 export const fileUpload = async (file: File) => {

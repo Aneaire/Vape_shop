@@ -16,6 +16,7 @@ import { Route as SuppliersIndexImport } from './routes/suppliers/index'
 import { Route as ProductListIndexImport } from './routes/product-list/index'
 import { Route as ProductDetailIndexImport } from './routes/product-detail/index'
 import { Route as CategoriesIndexImport } from './routes/categories/index'
+import { Route as CategoryCategoryIdImport } from './routes/category/$categoryId'
 
 // Create/Update Routes
 
@@ -44,6 +45,11 @@ const CategoriesIndexRoute = CategoriesIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CategoryCategoryIdRoute = CategoryCategoryIdImport.update({
+  path: '/category/$categoryId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -53,6 +59,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/category/$categoryId': {
+      id: '/category/$categoryId'
+      path: '/category/$categoryId'
+      fullPath: '/category/$categoryId'
+      preLoaderRoute: typeof CategoryCategoryIdImport
       parentRoute: typeof rootRoute
     }
     '/categories/': {
@@ -90,6 +103,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/category/$categoryId': typeof CategoryCategoryIdRoute
   '/categories': typeof CategoriesIndexRoute
   '/product-detail': typeof ProductDetailIndexRoute
   '/product-list': typeof ProductListIndexRoute
@@ -98,6 +112,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/category/$categoryId': typeof CategoryCategoryIdRoute
   '/categories': typeof CategoriesIndexRoute
   '/product-detail': typeof ProductDetailIndexRoute
   '/product-list': typeof ProductListIndexRoute
@@ -107,6 +122,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/category/$categoryId': typeof CategoryCategoryIdRoute
   '/categories/': typeof CategoriesIndexRoute
   '/product-detail/': typeof ProductDetailIndexRoute
   '/product-list/': typeof ProductListIndexRoute
@@ -117,15 +133,23 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/category/$categoryId'
     | '/categories'
     | '/product-detail'
     | '/product-list'
     | '/suppliers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories' | '/product-detail' | '/product-list' | '/suppliers'
+  to:
+    | '/'
+    | '/category/$categoryId'
+    | '/categories'
+    | '/product-detail'
+    | '/product-list'
+    | '/suppliers'
   id:
     | '__root__'
     | '/'
+    | '/category/$categoryId'
     | '/categories/'
     | '/product-detail/'
     | '/product-list/'
@@ -135,6 +159,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoryCategoryIdRoute: typeof CategoryCategoryIdRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   ProductDetailIndexRoute: typeof ProductDetailIndexRoute
   ProductListIndexRoute: typeof ProductListIndexRoute
@@ -143,6 +168,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoryCategoryIdRoute: CategoryCategoryIdRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   ProductDetailIndexRoute: ProductDetailIndexRoute,
   ProductListIndexRoute: ProductListIndexRoute,
@@ -162,6 +188,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/category/$categoryId",
         "/categories/",
         "/product-detail/",
         "/product-list/",
@@ -170,6 +197,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/category/$categoryId": {
+      "filePath": "category/$categoryId.tsx"
     },
     "/categories/": {
       "filePath": "categories/index.tsx"

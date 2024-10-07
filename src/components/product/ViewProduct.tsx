@@ -1,7 +1,9 @@
 import { useGetProduct } from "@/lib/react-query/queries";
 import { useDefaultValue } from "@/lib/store";
 import { useState } from "react";
+import ShowProductCategories from "../category/ShowProductCategories";
 import InventoryForm from "../inventory/InventoryForm";
+import ManageStock from "../inventory/ManageStock";
 import { Badge } from "../ui/badge";
 import {
   Dialog,
@@ -18,15 +20,17 @@ const ViewProduct = ({
   children,
   id,
   load = false,
+  sku,
 }: {
   children: React.ReactNode;
   id: string;
   load: any;
+  sku?: string;
 }) => {
   if (!load) return children;
-  const name = useDefaultValue((state) => state.description);
+  const name = useDefaultValue((state) => state.name);
   const description = useDefaultValue((state) => state.description);
-  const { data: product, isLoading } = useGetProduct(id);
+  const { data: product, isLoading } = useGetProduct(sku || id);
   const [open, setOpen] = useState(load);
 
   return (
@@ -57,6 +61,9 @@ const ViewProduct = ({
                 </Badge>
               )}
             </div>
+            <DialogDescription>
+              {product?.description || description}
+            </DialogDescription>{" "}
             <div className=" text-sm">
               {product?.inventory && (
                 <DialogDescription>
@@ -70,9 +77,13 @@ const ViewProduct = ({
               </DialogDescription>
             </div>
             <Separator />
-            <DialogDescription>
-              {product?.description || description}
-            </DialogDescription>
+            <div className="w-full px-[1px]">
+              <h1 className="font-pbold py-2">Categories</h1>
+              <ShowProductCategories
+                productId={id}
+                categories={product?.categories}
+              />
+            </div>
             <div className="w-full pr-2">
               <h1 className="font-pbold py-2">Inventory Info</h1>
               <InventoryForm
@@ -81,10 +92,14 @@ const ViewProduct = ({
                 inventory={product?.inventory}
               />
             </div>
-            {/* <div className="w-full pr-2">
-              <ManageStock/>
+            <Separator />
+            <div className="w-full pr-2">
+              <ManageStock
+                productId={id}
+                inventory={product?.inventory}
+                setOpen={setOpen}
               />
-            </div> */}
+            </div>
           </DialogHeader>
         </ScrollArea>
       </DialogContent>

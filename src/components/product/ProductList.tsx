@@ -4,11 +4,19 @@ import { useProductList } from "@/lib/store";
 import { IProductDocument } from "@/types/data";
 import { useEffect } from "react";
 
-const ProductList = () => {
+const ProductList = ({
+  productsForCategory,
+  page,
+}: {
+  productsForCategory?: IProductDocument[];
+  page: "products list" | "category";
+}) => {
   const setProducts = useProductList((state) => state.setProducts);
   const products = useProductList((state) => state.products);
   const setLoading = useProductList((state) => state.setLoading);
-  const { data, isLoading, isSuccess } = useGetProducts();
+  const { data, isLoading, isSuccess } = useGetProducts(
+    page === "products list"
+  );
 
   useEffect(() => {
     setProducts(data as IProductDocument[]);
@@ -17,13 +25,34 @@ const ProductList = () => {
 
   return (
     <>
-      {isLoading
-        ? null
-        : products && products?.length > 0
-          ? products?.map((product) => (
-              <ProductCard key={product.$id} product={product} />
-            ))
-          : "No Products Found"}
+      {page === "products list" && (
+        <>
+          {isLoading
+            ? null
+            : products && products?.length > 0
+              ? products?.map((product) => (
+                  <ProductCard
+                    page="products list"
+                    key={product.$id}
+                    product={product}
+                  />
+                ))
+              : "No Products Found"}
+        </>
+      )}
+      {page === "category" && (
+        <>
+          {productsForCategory && productsForCategory?.length > 0
+            ? productsForCategory?.map((product) => (
+                <ProductCard
+                  page="category"
+                  key={product.$id}
+                  product={product}
+                />
+              ))
+            : "No Products Found"}
+        </>
+      )}
     </>
   );
 };

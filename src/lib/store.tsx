@@ -57,3 +57,17 @@ export const useDefaultValue = create<IDefaultValue>((set) => ({
   image: "",
   imageId: "",
 }));
+
+type ICategory = {
+  categories: string[];
+  setCategories: (categories: string[]) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+};
+
+export const useCategoriesStore = create<ICategory>((set) => ({
+  categories: [],
+  setCategories: (categories) => set({ categories }),
+  loading: true,
+  setLoading: (loading) => set({ loading }),
+}));

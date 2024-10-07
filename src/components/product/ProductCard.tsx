@@ -7,11 +7,16 @@ import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
 import ViewProduct from "./ViewProduct";
 
-const ProductCard = ({ product }: { product: IProductDocument }) => {
+const ProductCard = ({
+  product,
+  page,
+}: {
+  product: IProductDocument;
+  page: "products list" | "category";
+}) => {
   const [open, setOpen] = useState(false);
   const generalDescription =
-    "A product is an item or service designed to meet the needs or desires of consumers. It can be physical, like clothing or electronics, or intangible, such as software or consulting services. Products are created to provide value by solving problems or enhancing the customer’s experience.";
-
+    "A product is an item or service designed to meet the needs or desires of consumers. It can be physical, like clothing or electronics, or intangible, such as software or consulting services. Products are created to provide value by solving problems or enhancing the customer's experience.";
   const removeProduct = useProductList((state) => state.removeProduct);
   const { mutate } = useDeleteProduct();
   const handleDelete = async () => {
@@ -20,9 +25,13 @@ const ProductCard = ({ product }: { product: IProductDocument }) => {
       mutate(product.$id);
     }
   };
-
   return (
-    <ViewProduct load={open} id={product.$id}>
+    <ViewProduct
+      key={`${product.$id}-${open}`}
+      sku={page === "category" ? product.sku : undefined}
+      load={open}
+      id={product.$id}
+    >
       <Card
         onClick={() => setOpen(true)}
         className="w-48 overflow-hidden z-10 flex flex-col cursor-pointer"
@@ -31,7 +40,7 @@ const ProductCard = ({ product }: { product: IProductDocument }) => {
           <img
             className="w-full h-32 object-cover"
             src={product.image}
-            alt={product.name}
+            alt="asd"
           />
           <Badge className="absolute top-1 right-1 text-xs bg-primary text-primary-foreground">
             ₱{product.price}
@@ -57,7 +66,7 @@ const ProductCard = ({ product }: { product: IProductDocument }) => {
             {product.description ? product.description : generalDescription}
           </p>
           <div className="mt-auto">
-            <button className=" mt-auto w-full py-1 px-2 bg-primary text-primary-foreground text-xs rounded-sm flex items-center justify-center gap-1 hover:bg-primary/90 transition-colors">
+            <button className="mt-auto w-full py-1 px-2 bg-primary text-primary-foreground text-xs rounded-sm flex items-center justify-center gap-1 hover:bg-primary/90 transition-colors">
               <MdShoppingCart size={12} />
               View Stock
             </button>

@@ -12,7 +12,7 @@ import { useProductList } from "@/lib/store";
 import { IProductDocument } from "@/types/data";
 import { productSchema } from "@/validator/product";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -27,22 +27,19 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 
+const generateSKU = () => `P${Math.floor(100000 + Math.random() * 900000)}`;
+
 const AddProduct = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
   const addProductToList = useProductList((state) => state.addProduct);
-  const products = useProductList((state) => state.products);
-  const skuValue = useRef<string>(
-    `P${Math.floor(100000 + Math.random() * 900000)}`
-  );
-
-  const { mutateAsync: addProduct, data: product } = useAddProduct();
+  const { mutateAsync: addProduct } = useAddProduct();
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "Vanilla Custard Vape",
       description: "Vanilla Custard",
-      sku: skuValue.current,
+      sku: "",
       price: 250,
       nicotineStrength: 2,
       flavor: "Vanilla ",
@@ -51,23 +48,34 @@ const AddProduct = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
+  const handleOpenChange = useCallback(
+    (newOpen: boolean) => {
+      if (newOpen) {
+        // Generate a new SKU when the dialog is opened
+        form.setValue("sku", generateSKU());
+      }
+      setOpen(newOpen);
+    },
+    [form]
+  );
+
   async function onSubmit(values: z.infer<typeof productSchema>) {
     toast("Adding product...");
     console.log(values);
-    await addProduct(values)
-      .then((data) => {
-        form.reset();
-        setOpen(false);
-        console.log("data", data);
-        console.log("products", products);
-        addProductToList(data as IProductDocument);
-        toast.success("Product added successfully");
-      })
-      .catch(console.error);
+    try {
+      const data = await addProduct(values);
+      form.reset();
+      setOpen(false);
+      addProductToList(data as IProductDocument);
+      toast.success("Product added successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add product");
+    }
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild onClick={() => setOpen(true)}>
         {children}
       </DialogTrigger>

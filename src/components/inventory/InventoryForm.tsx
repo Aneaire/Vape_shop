@@ -51,6 +51,7 @@ const InventoryForm = ({
         .then((data) => {
           form.reset();
           refreshList();
+          setAttemptToUpdate(false);
         })
         .catch(console.error);
       return;
@@ -61,6 +62,7 @@ const InventoryForm = ({
       .then((data) => {
         form.reset();
         refreshList();
+        setAttemptToUpdate(false);
       })
       .catch(console.error);
     return;
@@ -80,68 +82,70 @@ const InventoryForm = ({
   }, [form, inventory, prevInventory, productId]);
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className=" w-full flex gap-4 items-center pb-2"
-      >
-        {/* FIELDS */}
-        <div className=" flex gap-2">
-          <FormField
-            control={form.control}
-            name="quantity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Quantity</FormLabel>
-                <FormControl>
-                  <Input
-                    className="ml-[1px]"
-                    disabled={!attemptToUpdate}
-                    type="number"
-                    placeholder="Type the amount"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lowStockThreshold"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Low Stock Threshold</FormLabel>
-                <FormControl>
-                  <Input
-                    className={
-                      Number(form?.getValues("quantity")) <=
-                      Number(form?.getValues("lowStockThreshold")!)
-                        ? "focus-visible:ring-red-500"
-                        : ""
-                    }
-                    disabled={!attemptToUpdate}
-                    type="number"
-                    placeholder="Type the limit here"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        {/* BUTTONS */}
-        <Button
-          onClick={() => setAttemptToUpdate(!attemptToUpdate)}
-          type={!attemptToUpdate ? "submit" : "button"}
-          className="flex-1 mt-auto"
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className=" w-full flex gap-4 items-center pb-2"
         >
-          {attemptToUpdate ? "Update" : "Edit"}
-        </Button>
-      </form>
-    </Form>
+          {/* FIELDS */}
+          <div className=" flex gap-2">
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantity</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="ml-[1px]"
+                      disabled={!attemptToUpdate}
+                      type="number"
+                      placeholder="Type the amount"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lowStockThreshold"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Low Stock Threshold</FormLabel>
+                  <FormControl>
+                    <Input
+                      className={
+                        Number(form?.getValues("quantity")) <=
+                        Number(form?.getValues("lowStockThreshold")!)
+                          ? "focus-visible:ring-red-500"
+                          : ""
+                      }
+                      disabled={!attemptToUpdate}
+                      type="number"
+                      placeholder="Type the limit here"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* BUTTONS */}
+          <Button
+            onClick={() => setAttemptToUpdate(!attemptToUpdate)}
+            type={!attemptToUpdate ? "submit" : "button"}
+            className="flex-1 mt-auto"
+          >
+            {attemptToUpdate ? "Update" : "Edit"}
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 };
 

@@ -1,11 +1,13 @@
-import { IInventory, IProduct } from "@/types/data";
+import { ICategory, IInventory, IProduct } from "@/types/data";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   addProduct,
+  createCategory,
   createInventory,
   deleteProduct,
   updateInventory,
+  updateProductCategory,
 } from "../appwrite/api";
 import { QueryKeys } from "./queryKeys";
 
@@ -53,7 +55,7 @@ export const useUpdateInventory = (productId: string) => {
     onSuccess: () => {
       toast.success("Inventory updated successfully");
       QueryClient.invalidateQueries({
-        queryKey: [QueryKeys.PRODUCTS, productId],
+        queryKey: [QueryKeys.PRODUCTS],
       });
       QueryClient.invalidateQueries({
         queryKey: [QueryKeys.SEARCH],
@@ -70,6 +72,41 @@ export const useDeleteProduct = () => {
     mutationFn: (id: string) => deleteProduct(id),
     onSuccess: () => {
       toast.success("Product deleted successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+};
+
+// Categories
+
+export const useCreateCategory = () => {
+  const QueryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (category: ICategory) => createCategory(category),
+    onSuccess: () => {
+      toast.success("Category created successfully");
+      QueryClient.invalidateQueries({
+        queryKey: [QueryKeys.CATEGORIES],
+      });
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+};
+
+export const useUpdateProductCategory = (productId: string) => {
+  const QueryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (categoryId: string[]) =>
+      updateProductCategory(productId, categoryId),
+    onSuccess: () => {
+      toast.success("Category added successfully");
+      QueryClient.invalidateQueries({
+        queryKey: [QueryKeys.PRODUCTS, productId],
+      });
     },
     onError: () => {
       toast.error("Something went wrong");
