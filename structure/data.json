@@ -1,0 +1,191 @@
+{
+  "Products": {
+    "$id": "products",
+    "$permissions": [
+      "read('any')",
+      "create('team')",
+      "update('team')",
+      "delete('team')"
+    ],
+    "name": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 255
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 65535
+    },
+    "sku": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 36
+    },
+    "price": {
+      "type": "double",
+      "required": true,
+      "array": false,
+      "size": 8
+    },
+    "categoryId": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 36
+    },
+    "brandId": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 36
+    },
+    "nicotineStrength": {
+      "type": "integer",
+      "required": false,
+      "array": false,
+      "size": 4
+    },
+    "flavor": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 255
+    },
+    "volume": {
+      "type": "integer",
+      "required": false,
+      "array": false,
+      "size": 4
+    },
+    "image": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 255
+    }
+  },
+  "Categories": {
+    "$id": "categories",
+    "$permissions": [
+      "read('any')",
+      "create('team')",
+      "update('team')",
+      "delete('team')"
+    ],
+    "name": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 255
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 65535
+    }
+  },
+  "Brands": {
+    "$id": "brands",
+    "$permissions": [
+      "read('any')",
+      "create('team')",
+      "update('team')",
+      "delete('team')"
+    ],
+    "name": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 255
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 65535
+    },
+    "website": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 255
+    }
+  },
+  "Inventory": {
+    "$id": "inventory",
+    "$permissions": [
+      "read('team')",
+      "create('team')",
+      "update('team')",
+      "delete('team')"
+    ],
+    "productId": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 36
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "array": false,
+      "size": 4
+    },
+    "lastUpdated": {
+      "type": "datetime",
+      "required": true,
+      "array": false,
+      "size": 8
+    },
+    "lowStockThreshold": {
+      "type": "integer",
+      "required": false,
+      "array": false,
+      "size": 4
+    }
+  },
+  "Suppliers": {
+    "$id": "suppliers",
+    "$permissions": [
+      "read('team')",
+      "create('team')",
+      "update('team')",
+      "delete('team')"
+    ],
+    "name": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 255
+    },
+    "contactPerson": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 255
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "array": false,
+      "size": 320
+    },
+    "phone": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 20
+    },
+    "address": {
+      "type": "string",
+      "required": false,
+      "array": false,
+      "size": 1000
+    }
+  }
+}

@@ -11,18 +11,36 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as SuppliersIndexImport } from './routes/suppliers/index'
+import { Route as ProductListIndexImport } from './routes/product-list/index'
+import { Route as ProductDetailIndexImport } from './routes/product-detail/index'
+import { Route as CategoriesIndexImport } from './routes/categories/index'
 
 // Create/Update Routes
 
-const AboutRoute = AboutImport.update({
-  path: '/about',
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
-  path: '/',
+const SuppliersIndexRoute = SuppliersIndexImport.update({
+  path: '/suppliers/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProductListIndexRoute = ProductListIndexImport.update({
+  path: '/product-list/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProductDetailIndexRoute = ProductDetailIndexImport.update({
+  path: '/product-detail/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CategoriesIndexRoute = CategoriesIndexImport.update({
+  path: '/categories/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -37,11 +55,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
+    '/categories/': {
+      id: '/categories/'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/product-detail/': {
+      id: '/product-detail/'
+      path: '/product-detail'
+      fullPath: '/product-detail'
+      preLoaderRoute: typeof ProductDetailIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/product-list/': {
+      id: '/product-list/'
+      path: '/product-list'
+      fullPath: '/product-list'
+      preLoaderRoute: typeof ProductListIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/suppliers/': {
+      id: '/suppliers/'
+      path: '/suppliers'
+      fullPath: '/suppliers'
+      preLoaderRoute: typeof SuppliersIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -51,37 +90,63 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/categories': typeof CategoriesIndexRoute
+  '/product-detail': typeof ProductDetailIndexRoute
+  '/product-list': typeof ProductListIndexRoute
+  '/suppliers': typeof SuppliersIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/categories': typeof CategoriesIndexRoute
+  '/product-detail': typeof ProductDetailIndexRoute
+  '/product-list': typeof ProductListIndexRoute
+  '/suppliers': typeof SuppliersIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/categories/': typeof CategoriesIndexRoute
+  '/product-detail/': typeof ProductDetailIndexRoute
+  '/product-list/': typeof ProductListIndexRoute
+  '/suppliers/': typeof SuppliersIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/categories'
+    | '/product-detail'
+    | '/product-list'
+    | '/suppliers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to: '/' | '/categories' | '/product-detail' | '/product-list' | '/suppliers'
+  id:
+    | '__root__'
+    | '/'
+    | '/categories/'
+    | '/product-detail/'
+    | '/product-list/'
+    | '/suppliers/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
+  CategoriesIndexRoute: typeof CategoriesIndexRoute
+  ProductDetailIndexRoute: typeof ProductDetailIndexRoute
+  ProductListIndexRoute: typeof ProductListIndexRoute
+  SuppliersIndexRoute: typeof SuppliersIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
+  CategoriesIndexRoute: CategoriesIndexRoute,
+  ProductDetailIndexRoute: ProductDetailIndexRoute,
+  ProductListIndexRoute: ProductListIndexRoute,
+  SuppliersIndexRoute: SuppliersIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +162,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/categories/",
+        "/product-detail/",
+        "/product-list/",
+        "/suppliers/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/categories/": {
+      "filePath": "categories/index.tsx"
+    },
+    "/product-detail/": {
+      "filePath": "product-detail/index.tsx"
+    },
+    "/product-list/": {
+      "filePath": "product-list/index.tsx"
+    },
+    "/suppliers/": {
+      "filePath": "suppliers/index.tsx"
     }
   }
 }
